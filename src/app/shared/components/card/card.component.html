@@ -7,7 +7,7 @@
         {{ product?.description }}
       </p>
       <h3 class="preco-produto">R$ {{ product?.price }}</h3>
-      <span *ngIf="isManagable">
+      <span *ngIf="isManageable">
         <mat-icon (click)="onEditClick()">edit</mat-icon>
         <mat-icon (click)="onDeleteClick()">delete</mat-icon>
       </span>

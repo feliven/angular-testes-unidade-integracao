@@ -15,7 +15,7 @@ export class CardComponent {
   product: Product | null = null;
 
   @Input()
-  isManagable = false;
+  isManageable = false;
 
   @Output() onDelete = new EventEmitter<Product | null>();
 
