@@ -1,0 +1,57 @@
+$white: var(--branco);
+
+header {
+  display: flex;
+  height: 107px;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  font-family: "Montserrat";
+  background-color: $white;
+
+  & .a {
+    position: relative;
+    width: 209.97px;
+    height: 30px;
+  }
+
+  & nav {
+    display: flex;
+    flex-direction: column;
+    width: 1072.02px;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 40px;
+    position: relative;
+
+    & ul {
+      display: inline-flex;
+      align-items: center;
+      gap: 40px;
+      position: relative;
+      flex: 0 0 auto;
+
+      & li {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 32px;
+        position: relative;
+        flex: 0 0 auto;
+
+        & a {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          position: relative;
+          flex: 0 0 auto;
+          font-size: 18px;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+<article class="card-produto">
+  <section>
+    <img src="{{ product?.image }}" alt="Imagem do produto" />
+    <div class="produto-info">
+      <h2 class="titulo-produto">{{ product?.title }}</h2>
+      <p class="descricao-produto">
+        {{ product?.description }}
+      </p>
+      <h3 class="preco-produto">R$ {{ product?.price }}</h3>
+      <span *ngIf="isManagable">
+        <mat-icon (click)="onEditClick()">edit</mat-icon>
+        <mat-icon (click)="onDeleteClick()">delete</mat-icon>
+      </span>
+    </div>
+  </section>
+</article>

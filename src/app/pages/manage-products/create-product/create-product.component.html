@@ -1,0 +1,92 @@
+<section>
+  <div class="title">
+    <h1>Cadastrar Produtos</h1>
+  </div>
+
+  <article class="form-group">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmitForm()">
+      <div class="form-row">
+        <mat-form-field appearance="fill">
+          <mat-label>Nome</mat-label>
+          <input matInput formControlName="title" />
+          <mat-error *ngIf="formGroup.get('title')?.invalid"
+            >O nome é obrigatório</mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="fill">
+          <mat-label>Categoria</mat-label>
+          <mat-select formControlName="category">
+            <mat-option
+              *ngFor="let category of categories$ | async"
+              [value]="category"
+              >{{ category }}</mat-option
+            >
+          </mat-select>
+          <mat-error *ngIf="formGroup.get('category')?.invalid"
+            >A categoria é obrigatória</mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <div class="form-group-row">
+        <mat-form-field appearance="fill" class="flex-item">
+          <mat-label>Preço</mat-label>
+          <input matInput formControlName="price" />
+          <mat-error *ngIf="formGroup.get('price')?.invalid"
+            >O preço é obrigatório</mat-error
+          >
+        </mat-form-field>
+
+        <button
+          type="button"
+          mat-icon-button
+          matSuffix
+          (click)="fileInput.click()"
+        >
+          <mat-icon>attach_file</mat-icon>
+        </button>
+        <input
+          hidden
+          (change)="onImageSelected($event)"
+          formControlName="image"
+          #fileInput
+          type="file"
+          id="file"
+        />
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="fill">
+          <mat-label>Descrição do produto</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+          <mat-error *ngIf="formGroup.get('description')?.invalid"
+            >A descrição é obrigatória</mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <div class="form-group-row">
+        <button
+          mat-raised-button
+          color="primary"
+          class="btn primary flex-item"
+          [disabled]="formGroup.invalid"
+        >
+          Salvar
+        </button>
+        <button
+          mat-raised-button
+          color="secondary"
+          type="button"
+          class="btn secondary flex-item"
+          (click)="onCancelClick()"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </article>
+</section>

@@ -1,0 +1,109 @@
+.card-produto,
+.card-produto * {
+  box-sizing: border-box;
+}
+
+.card-produto {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+  box-shadow: 0px 4px 24px 0px rgba(123, 123, 123, 0.15);
+
+  & section {
+    width: 1000px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 1;
+    position: relative;
+  }
+
+  & img {
+    background: linear-gradient(to left, #e5ebf5, #e5ebf5);
+    align-self: stretch;
+    flex-shrink: 0;
+    width: 220px;
+    position: relative;
+    object-fit: cover;
+  }
+
+  & .produto-info {
+    background: var(--branco, #ffffff);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: flex-start;
+    justify-content: center;
+    align-self: stretch;
+    flex: 1;
+    position: relative;
+  }
+
+  & .titulo-produto,
+  & .descricao-produto,
+  & .preco-produto {
+    color: var(--azul-1, #19325c);
+    text-align: left;
+    position: relative;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  & .titulo-produto {
+    font-family: var(
+      --paragraph-bold-font-family,
+      "Montserrat-Bold",
+      sans-serif
+    );
+    font-size: var(--paragraph-bold-font-size, 18px);
+    line-height: var(--paragraph-bold-line-height, 150%);
+    font-weight: var(--paragraph-bold-font-weight, 700);
+  }
+
+  & .descricao-produto {
+    font-family: var(
+      --paragraph-small-font-family,
+      "Montserrat-Regular",
+      sans-serif
+    );
+    font-size: var(--paragraph-small-font-size, 15px);
+    line-height: var(--paragraph-small-line-height, 150%);
+    font-weight: var(--paragraph-small-font-weight, 400);
+  }
+
+  & .preco-produto {
+    font-family: var(
+      --subtitle-small-bold-font-family,
+      "Montserrat-Bold",
+      sans-serif
+    );
+    font-size: var(--subtitle-small-bold-font-size, 26px);
+    line-height: var(--subtitle-small-bold-line-height, 150%);
+    font-weight: var(--subtitle-small-bold-font-weight, 700);
+  }
+
+  span {
+    mat-icon {
+      cursor: pointer;
+
+      &:hover {
+        color: red;
+      }
+    }
+
+    mat-icon:first-child {
+      margin-right: 10px;
+    }
+  }
+}

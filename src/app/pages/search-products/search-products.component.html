@@ -1,0 +1,18 @@
+<div
+  infinite-scroll
+  [infiniteScrollDistance]="2"
+  [infiniteScrollThrottle]="1000"
+  (scrolled)="onScroll()"
+>
+  <app-banner title="Busca de Produtos"></app-banner>
+
+  <app-search (searchText)="onSearchText($event)"></app-search>
+
+  @for (product of products(); track product.id) {
+    @defer (on viewport) {
+      <app-card [product]="product" />
+    } @placeholder {
+      <div>Carregando...</div>
+    }
+  }
+</div>
