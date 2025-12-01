@@ -1,4 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  flushMicrotasks,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
 
@@ -33,7 +39,7 @@ class MockCreateProductApiService {
   }
 }
 
-fdescribe('CreateProductComponent', () => {
+fdescribe('CreateProductComponent (editar produto)', () => {
   let component: CreateProductComponent;
   let fixture: ComponentFixture<CreateProductComponent>;
 
@@ -124,5 +130,198 @@ fdescribe('CreateProductComponent', () => {
     expect(mockDialogRef.close).toHaveBeenCalled();
   });
 
-  // it('', () => {});
+  // ---
+
+  it('deve remover a obrigatoriedade da imagem ao editar', () => {
+    const imageControl = component.formGroup.get('image');
+    // Control tem valor vazio porém não deve ter o validator required ativo
+    expect(imageControl?.valid).toBeTrue();
+  });
+
+  it('deve criar File a partir da base64 (imageSelected definido)', () => {
+    const internalImage: File = (component as any).imageSelected;
+    expect(internalImage).toBeDefined();
+    expect(internalImage.name).toBe('image.jpeg');
+    expect(internalImage.type).toBe('image/jpeg');
+  });
+
+  it('não deve chamar save se nenhuma imagem estiver selecionada (defesa)', fakeAsync(() => {
+    (component as any).imageSelected = undefined;
+    const service = TestBed.inject(CreateProductService);
+    spyOn(service, 'save').and.returnValue(Promise.resolve());
+
+    try {
+      component.onSubmitForm();
+    } catch {}
+    flushMicrotasks();
+    expect(service.save).not.toHaveBeenCalled();
+    expect(mockDialogRef.close).not.toHaveBeenCalled();
+  }));
+
+  it('deve manter os valores do formulário inalterados após ngOnInit com dados (edição)', () => {
+    expect(component.formGroup.value).toEqual(
+      jasmine.objectContaining({
+        id: mockData.id,
+        title: mockData.title,
+        description: mockData.description,
+        category: mockData.category,
+        price: mockData.price,
+      })
+    );
+  });
+
+  it('deve atualizar imageSelected ao selecionar uma nova imagem na edição', () => {
+    const fakeFile = new File(['x'], 'nova.jpg', { type: 'image/jpeg' });
+    component.onImageSelected({ target: { files: [fakeFile] } });
+    const internalImage: File = (component as any).imageSelected;
+    expect(internalImage).toBe(fakeFile);
+    expect(component.formGroup.get('image')?.value).toBe('');
+  });
+});
+
+describe('CreateProductComponent (novo produto)', () => {
+  let component: CreateProductComponent;
+  let fixture: ComponentFixture<CreateProductComponent>;
+  const mockDialogRef = { close: jasmine.createSpy('close') };
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        CreateProductComponent,
+        CommonModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatSelectModule,
+        MatIconModule,
+        BrowserAnimationsModule,
+      ],
+      providers: [
+        provideHttpClient(),
+        CreateProductService,
+        CreateProductApiService,
+        { provide: MAT_DIALOG_DATA, useValue: null },
+        { provide: MatDialogRef, useValue: mockDialogRef },
+      ],
+    }).compileComponents();
+
+    TestBed.overrideComponent(CreateProductComponent, {
+      set: {
+        providers: [
+          {
+            provide: CreateProductApiService,
+            useClass: MockCreateProductApiService,
+          },
+        ],
+      },
+    });
+
+    fixture = TestBed.createComponent(CreateProductComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('form deve iniciar inválido (campos obrigatórios vazios)', () => {
+    expect(component.formGroup.invalid).toBeTrue();
+    ['title', 'description', 'category', 'price', 'image'].forEach((ctrl) => {
+      expect(component.formGroup.get(ctrl)?.invalid).toBeTrue();
+    });
+  });
+
+  it('deve ficar válido após preencher todos os campos', () => {
+    component.formGroup.patchValue({
+      title: 'Produto X',
+      description: 'Desc',
+      category: 'electronics',
+      price: '10',
+      image: 'file-placeholder',
+    });
+    expect(component.formGroup.valid).toBeTrue();
+  });
+
+  it('deve selecionar a imagem e permitir submit após preencher restantes', () => {
+    const fakeFile = new File(['conteudo'], 'foto.jpg', { type: 'image/jpeg' });
+    const evento = { target: { files: [fakeFile] } };
+    component.onImageSelected(evento);
+    component.formGroup.patchValue({
+      title: 'Produto',
+      description: 'Desc',
+      category: 'electronics',
+      price: '20',
+      image: 'foto.jpg',
+    });
+    expect(component.formGroup.valid).toBeTrue();
+  });
+
+  it('deve chamar save e fechar dialog ao submeter novo produto', async () => {
+    const service = TestBed.inject(CreateProductService);
+    spyOn(service, 'save').and.returnValue(Promise.resolve());
+    const fakeFile = new File(['x'], 'novo.jpg', { type: 'image/jpeg' });
+    component.onImageSelected({ target: { files: [fakeFile] } });
+    component.formGroup.patchValue({
+      title: 'Novo',
+      description: 'Desc',
+      category: 'electronics',
+      price: '30',
+      image: 'novo.jpg',
+    });
+    class MockFileReader {
+      result: string | ArrayBuffer | null = 'data:image/jpeg;base64,AAA';
+      onload: any;
+      readAsDataURL(_: File) {
+        if (this.onload) {
+          this.onload();
+        }
+      }
+    }
+    spyOn(window as any, 'FileReader').and.returnValue(new MockFileReader());
+    component.onSubmitForm();
+    await fixture.whenStable();
+    expect(service.save).toHaveBeenCalledTimes(1);
+    expect(service.save).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        title: 'Novo',
+        image: 'data:image/jpeg;base64,AAA',
+      })
+    );
+    expect(mockDialogRef.close).toHaveBeenCalled();
+  });
+
+  it('deve continuar inválido se faltar qualquer campo obrigatório', () => {
+    component.formGroup.patchValue({
+      title: 'Prod',
+      description: 'Desc',
+      category: 'electronics',
+      price: '', // faltando
+      image: 'foto.jpg',
+    });
+    expect(component.formGroup.invalid).toBeTrue();
+    expect(component.formGroup.get('price')?.invalid).toBeTrue();
+  });
+
+  it('não deve permitir submit se form inválido (sem image)', fakeAsync(() => {
+    const service = TestBed.inject(CreateProductService);
+    spyOn(service, 'save').and.returnValue(Promise.resolve());
+    component.formGroup.patchValue({
+      title: 'SemImagem',
+      description: 'Desc',
+      category: 'electronics',
+      price: '10',
+      image: '', // permanece inválido
+    });
+
+    try {
+      component.onSubmitForm();
+    } catch {}
+    flushMicrotasks();
+    expect(service.save).not.toHaveBeenCalled();
+    expect(mockDialogRef.close).not.toHaveBeenCalled();
+  }));
+
+  it('onImageSelected deve definir imageSelected corretamente', () => {
+    const fakeFile = new File(['abc'], 'foto.png', { type: 'image/png' });
+    component.onImageSelected({ target: { files: [fakeFile] } });
+    expect((component as any).imageSelected).toBe(fakeFile);
+  });
 });
