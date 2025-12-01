@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
@@ -10,7 +9,7 @@ import { Product } from '../../types/product.inteface';
 import { ProductsService } from '../../shared/services/products/products.service';
 import { ProductsApiService } from '../../shared/services/products/products-api.service';
 
-const MODULES = [CommonModule, HttpClientModule, InfiniteScrollModule];
+const MODULES = [CommonModule, InfiniteScrollModule];
 
 const COMPONENTS = [BannerComponent, SearchComponent, CardComponent];
 

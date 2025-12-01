@@ -14,7 +14,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Observable } from 'rxjs';
-import { HttpClientModule } from '@angular/common/http';
 
 import { CreateProductApiService } from './services/create-product-api.service';
 import { CreateProductService } from './services/create-product.service';
@@ -28,7 +27,6 @@ const MODULES = [
   MatButtonModule,
   MatSelectModule,
   MatIconModule,
-  HttpClientModule,
 ];
 
 @Component({
@@ -50,7 +48,7 @@ export class CreateProductComponent implements OnInit {
     private createProductService: CreateProductService,
     private createProductApiService: CreateProductApiService,
     private dialogRef: MatDialogRef<CreateProductComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: Product,
+    @Inject(MAT_DIALOG_DATA) private data: Product
   ) {}
 
   ngOnInit(): void {
@@ -72,7 +70,7 @@ export class CreateProductComponent implements OnInit {
 
       this.imageSelected = this.base64StringToFile(
         this.data.image,
-        'image.jpeg',
+        'image.jpeg'
       );
 
       this.formGroup.get('image')?.removeValidators(Validators.required);
