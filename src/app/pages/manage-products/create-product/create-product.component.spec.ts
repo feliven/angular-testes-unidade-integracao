@@ -156,6 +156,7 @@ fdescribe('CreateProductComponent (editar produto)', () => {
 
   it('deve criar File a partir da base64 (imageSelected definido)', () => {
     const internalImage: File = (component as any).imageSelected;
+
     expect(internalImage).toBeDefined();
     expect(internalImage.name).toBe('image.jpeg');
     expect(internalImage.type).toBe('image/jpeg');
@@ -188,7 +189,9 @@ fdescribe('CreateProductComponent (editar produto)', () => {
   it('deve atualizar imageSelected ao selecionar uma nova imagem na edição', () => {
     const fakeFile = new File(['x'], 'nova.jpg', { type: 'image/jpeg' });
     component.onImageSelected({ target: { files: [fakeFile] } });
+
     const internalImage: File = (component as any).imageSelected;
+
     expect(internalImage).toBe(fakeFile);
     expect(component.formGroup.get('image')?.value).toBe('');
   });
@@ -249,46 +252,63 @@ describe('CreateProductComponent (novo produto)', () => {
       description: 'Desc',
       category: 'electronics',
       price: '10',
-      image: 'file-placeholder',
     });
+
+    // Browser security prevents setting the value of a file input to anything other than an empty string.
+    component.formGroup
+      .get('image')
+      ?.setValue('file-placeholder', { emitModelToViewChange: false });
+
     expect(component.formGroup.valid).toBeTrue();
   });
 
   it('deve selecionar a imagem e permitir submit após preencher restantes', () => {
     const fakeFile = new File(['conteudo'], 'foto.jpg', { type: 'image/jpeg' });
     const evento = { target: { files: [fakeFile] } };
+
     component.onImageSelected(evento);
     component.formGroup.patchValue({
       title: 'Produto',
       description: 'Desc',
       category: 'electronics',
       price: '20',
-      image: 'foto.jpg',
     });
+
+    component.formGroup
+      .get('image')
+      ?.setValue('foto.jpg', { emitModelToViewChange: false });
+
     expect(component.formGroup.valid).toBeTrue();
   });
 
   it('deve chamar save e fechar dialog ao submeter novo produto', async () => {
     const service = TestBed.inject(CreateProductService);
     spyOn(service, 'save').and.returnValue(Promise.resolve());
+
     const fakeFile = new File(['x'], 'novo.jpg', { type: 'image/jpeg' });
     component.onImageSelected({ target: { files: [fakeFile] } });
+
     component.formGroup.patchValue({
       title: 'Novo',
       description: 'Desc',
       category: 'electronics',
       price: '30',
-      image: 'novo.jpg',
     });
+
+    component.formGroup
+      .get('image')
+      ?.setValue('novo.jpg', { emitModelToViewChange: false });
+
     class MockFileReader {
       result: string | ArrayBuffer | null = 'data:image/jpeg;base64,AAA';
       onload: any;
       readAsDataURL(_: File) {
         if (this.onload) {
-          this.onload();
+          this.onload({ target: { result: this.result } });
         }
       }
     }
+
     spyOn(window as any, 'FileReader').and.returnValue(new MockFileReader());
     component.onSubmitForm();
     await fixture.whenStable();
@@ -299,6 +319,7 @@ describe('CreateProductComponent (novo produto)', () => {
         image: 'data:image/jpeg;base64,AAA',
       })
     );
+
     expect(mockDialogRef.close).toHaveBeenCalled();
   });
 
@@ -308,8 +329,12 @@ describe('CreateProductComponent (novo produto)', () => {
       description: 'Desc',
       category: 'electronics',
       price: '', // faltando
-      image: 'foto.jpg',
     });
+
+    component.formGroup
+      .get('image')
+      ?.setValue('foto.jpg', { emitModelToViewChange: false });
+
     expect(component.formGroup.invalid).toBeTrue();
     expect(component.formGroup.get('price')?.invalid).toBeTrue();
   });

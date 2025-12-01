@@ -77,8 +77,11 @@ export class CreateProductComponent implements OnInit {
   }
 
   onSubmitForm(): void {
+    if (this.formGroup.invalid || !this.imageSelected) {
+      return;
+    }
+
     const reader = new FileReader();
-    reader.readAsDataURL(this.imageSelected);
 
     reader.onload = () => {
       this.createProductService
@@ -88,6 +91,8 @@ export class CreateProductComponent implements OnInit {
         })
         .then(() => this.dialogRef.close());
     };
+
+    reader.readAsDataURL(this.imageSelected);
   }
 
   onCancelClick(): void {
