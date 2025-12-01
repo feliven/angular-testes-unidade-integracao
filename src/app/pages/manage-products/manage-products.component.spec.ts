@@ -7,7 +7,7 @@ import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import { CreateProductComponent } from './create-product/create-product.component';
 import { Product } from '../../types/product.inteface';
 
-fdescribe('ManageProductsComponent', () => {
+describe('ManageProductsComponent', () => {
   let component: ManageProductsComponent;
   let fixture: ComponentFixture<ManageProductsComponent>;
   let productsServiceMock: any;
