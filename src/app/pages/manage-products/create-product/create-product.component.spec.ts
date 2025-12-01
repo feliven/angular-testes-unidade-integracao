@@ -33,7 +33,7 @@ class MockCreateProductApiService {
   }
 }
 
-describe('CreateProductComponent', () => {
+fdescribe('CreateProductComponent', () => {
   let component: CreateProductComponent;
   let fixture: ComponentFixture<CreateProductComponent>;
 
@@ -107,7 +107,7 @@ describe('CreateProductComponent', () => {
     });
   });
 
-  fit('deve verificar se o formulário esta preenchido com as informações do produto', () => {
+  it('deve verificar se o formulário esta preenchido com as informações do produto', () => {
     expect(component.formGroup.get('id')?.value).toEqual(mockData.id);
     expect(component.formGroup.get('title')?.value).toEqual(mockData.title);
     expect(component.formGroup.get('description')?.value).toEqual(
@@ -117,6 +117,11 @@ describe('CreateProductComponent', () => {
       mockData.category
     );
     expect(component.formGroup.get('price')?.value).toEqual(mockData.price);
+  });
+
+  it('deve chamar o método close ao clicar no botão cancelar', () => {
+    component.onCancelClick();
+    expect(mockDialogRef.close).toHaveBeenCalled();
   });
 
   // it('', () => {});
