@@ -41,11 +41,6 @@ describe('CreateProductComponent', () => {
     close: jasmine.createSpy('close'),
   };
 
-  const mockDialogData = {
-    title: 'Test Title',
-    message: 'Test Message',
-  };
-
   const mockData = {
     id: '1',
     title: 'teste',
@@ -98,7 +93,7 @@ describe('CreateProductComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('deveria listar as categorias', () => {
+  it('deveria listar as categorias', () => {
     const categorias = [
       'electronics',
       'jewelery',
@@ -110,6 +105,18 @@ describe('CreateProductComponent', () => {
       console.log(resultado);
       expect(categorias).toEqual(resultado);
     });
+  });
+
+  fit('deve verificar se o formulário esta preenchido com as informações do produto', () => {
+    expect(component.formGroup.get('id')?.value).toEqual(mockData.id);
+    expect(component.formGroup.get('title')?.value).toEqual(mockData.title);
+    expect(component.formGroup.get('description')?.value).toEqual(
+      mockData.description
+    );
+    expect(component.formGroup.get('category')?.value).toEqual(
+      mockData.category
+    );
+    expect(component.formGroup.get('price')?.value).toEqual(mockData.price);
   });
 
   // it('', () => {});
