@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
+import { Observable, of } from 'rxjs';
 
 import { CreateProductComponent } from './create-product.component';
+import { CreateProductService } from './services/create-product.service';
+import { CreateProductApiService } from './services/create-product-api.service';
 
 import {
   FormBuilder,
@@ -19,7 +22,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { provideHttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-fdescribe('CreateProductComponent', () => {
+class MockCreateProductApiService {
+  getAllCategories(): Observable<string[]> {
+    return of([
+      'electronics',
+      'jewelery',
+      "men's clothing",
+      "women's clothing",
+    ]);
+  }
+}
+
+describe('CreateProductComponent', () => {
   let component: CreateProductComponent;
   let fixture: ComponentFixture<CreateProductComponent>;
 
@@ -57,10 +71,23 @@ fdescribe('CreateProductComponent', () => {
       ],
       providers: [
         provideHttpClient(),
+        CreateProductService,
+        CreateProductApiService,
         { provide: MAT_DIALOG_DATA, useValue: mockData },
         { provide: MatDialogRef, useValue: mockDialogRef },
       ],
     }).compileComponents();
+
+    TestBed.overrideComponent(CreateProductComponent, {
+      set: {
+        providers: [
+          {
+            provide: CreateProductApiService,
+            useClass: MockCreateProductApiService,
+          },
+        ],
+      },
+    });
 
     fixture = TestBed.createComponent(CreateProductComponent);
     component = fixture.componentInstance;
@@ -70,4 +97,20 @@ fdescribe('CreateProductComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  fit('deveria listar as categorias', () => {
+    const categorias = [
+      'electronics',
+      'jewelery',
+      "men's clothing",
+      "women's clothing",
+    ];
+
+    component.categories$.subscribe((resultado) => {
+      console.log(resultado);
+      expect(categorias).toEqual(resultado);
+    });
+  });
+
+  // it('', () => {});
 });
