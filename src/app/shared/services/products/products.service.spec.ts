@@ -46,25 +46,6 @@ class StorageServiceMock {
   }
 }
 
-const mockProducts: Product[] = [
-  {
-    id: 1,
-    title: 'Product 1',
-    price: '100',
-    description: 'Desc 1',
-    image: 'img1.jpg',
-    category: 'cat1',
-  },
-  {
-    id: 2,
-    title: 'Product 2',
-    price: '200',
-    description: 'Desc 2',
-    image: 'img2.jpg',
-    category: 'cat2',
-  },
-];
-
 const mockStoredProducts: Product[] = [
   {
     id: 3,
@@ -87,9 +68,6 @@ const mockStoredProducts: Product[] = [
 fdescribe('ProductsService', () => {
   let service: ProductsService;
   let sessionStorage = new StorageServiceMock();
-
-  // let storageServiceSpy: jasmine.SpyObj<StorageService>;
-  // let productsApiServiceSpy: jasmine.SpyObj<ProductsApiService>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -143,6 +121,7 @@ fdescribe('ProductsService', () => {
     //     expect(service.products().length).toBe(1);
     //     expect(service.products()[0].title).toBe('Product 2');
     //   });
+
     it('should return all matching products', () => {
       service.find('Produto');
       expect(service.products().length).toBe(2);
@@ -182,58 +161,54 @@ fdescribe('ProductsService', () => {
     });
   });
 
-  // describe('fetchAllProducts', () => {
-  //   it('should increment currentItemPerPage', () => {
-  //     productsApiServiceSpy.getAllProducts.and.returnValue(of([]));
+  describe('fetchAllProducts', () => {
+    beforeEach(() => {
+      service.products.set(mockStoredProducts);
+    });
 
-  //     service.fetchAllProducts(10);
-  //     expect(service.currentItemPerPage).toBe(10);
+    //   it('should increment currentItemPerPage', () => {
+    //     productsApiServiceSpy.getAllProducts.and.returnValue(of([]));
+    //     service.fetchAllProducts(10);
+    //     expect(service.currentItemPerPage).toBe(10);
+    //     service.fetchAllProducts(5);
+    //     expect(service.currentItemPerPage).toBe(15);
+    //   });
 
-  //     service.fetchAllProducts(5);
-  //     expect(service.currentItemPerPage).toBe(15);
-  //   });
+    it('should call productsApiService with correct parameter', () => {
+      service.fetchAllProducts(10);
 
-  //   it('should call productsApiService with correct parameter', () => {
-  //     productsApiServiceSpy.getAllProducts.and.returnValue(of([]));
+      expect(service.products().length).toBe(4);
+    });
 
-  //     service.fetchAllProducts(10);
-  //     expect(productsApiServiceSpy.getAllProducts).toHaveBeenCalledWith(10);
-  //   });
-
-  //   it('should add new products to the products signal', () => {
-  //     productsApiServiceSpy.getAllProducts.and.returnValue(of(mockProducts));
-
-  //     service.fetchAllProducts(10);
-  //     expect(service.products()).toEqual(mockProducts);
-  //   });
-
-  //   it('should not add duplicate products', () => {
-  //     service.products.set([mockProducts[0]]);
-  //     productsApiServiceSpy.getAllProducts.and.returnValue(of(mockProducts));
-
-  //     service.fetchAllProducts(10);
-  //     expect(service.products().length).toBe(2);
-  //     expect(service.products()).toContain(mockProducts[0]);
-  //     expect(service.products()).toContain(mockProducts[1]);
-  //   });
-
-  //   it('should preserve existing products when adding new ones', () => {
-  //     const existingProduct: Product = {
-  //       id: 99,
-  //       title: 'Existing',
-  //       price: '10',
-  //       description: 'Existing',
-  //       image: 'existing.jpg',
-  //       category: 'existing',
-  //     };
-  //     service.products.set([existingProduct]);
-  //     productsApiServiceSpy.getAllProducts.and.returnValue(of(mockProducts));
-
-  //     service.fetchAllProducts(10);
-  //     expect(service.products().length).toBe(3);
-  //     expect(service.products()).toContain(existingProduct);
-  //   });
-  // });
+    //   it('should add new products to the products signal', () => {
+    //     productsApiServiceSpy.getAllProducts.and.returnValue(of(mockProducts));
+    //     service.fetchAllProducts(10);
+    //     expect(service.products()).toEqual(mockProducts);
+    //   });
+    //   it('should not add duplicate products', () => {
+    //     service.products.set([mockProducts[0]]);
+    //     productsApiServiceSpy.getAllProducts.and.returnValue(of(mockProducts));
+    //     service.fetchAllProducts(10);
+    //     expect(service.products().length).toBe(2);
+    //     expect(service.products()).toContain(mockProducts[0]);
+    //     expect(service.products()).toContain(mockProducts[1]);
+    //   });
+    //   it('should preserve existing products when adding new ones', () => {
+    //     const existingProduct: Product = {
+    //       id: 99,
+    //       title: 'Existing',
+    //       price: '10',
+    //       description: 'Existing',
+    //       image: 'existing.jpg',
+    //       category: 'existing',
+    //     };
+    //     service.products.set([existingProduct]);
+    //     productsApiServiceSpy.getAllProducts.and.returnValue(of(mockProducts));
+    //     service.fetchAllProducts(10);
+    //     expect(service.products().length).toBe(3);
+    //     expect(service.products()).toContain(existingProduct);
+    //   });
+  });
 
   // describe('delete', () => {
   //   it('should call storageService.remove with product id', () => {
