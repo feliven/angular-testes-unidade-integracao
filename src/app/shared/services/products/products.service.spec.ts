@@ -119,33 +119,39 @@ fdescribe('ProductsService', () => {
     });
   });
 
-  // describe('find', () => {
-  //   beforeEach(() => {
-  //     service.products.set(mockProducts);
-  //   });
+  describe('find', () => {
+    beforeEach(() => {
+      service.products.set(mockStoredProducts);
+    });
 
-  //   it('should filter products by title (case insensitive)', () => {
-  //     service.find('product 1');
-  //     expect(service.products().length).toBe(1);
-  //     expect(service.products()[0].title).toBe('Product 1');
-  //   });
+    it('deve filtrar os produtos pelo título', () => {
+      service.find('C');
 
-  //   it('should filter products with uppercase search text', () => {
-  //     service.find('PRODUCT 2');
-  //     expect(service.products().length).toBe(1);
-  //     expect(service.products()[0].title).toBe('Product 2');
-  //   });
+      const products = service.products().flat();
 
-  //   it('should return all matching products', () => {
-  //     service.find('Product');
-  //     expect(service.products().length).toBe(2);
-  //   });
+      expect(products.length).toBe(1);
+      expect(products[0].title).toBe('Produto C');
+    });
 
-  //   it('should return empty array when no products match', () => {
-  //     service.find('nonexistent');
-  //     expect(service.products().length).toBe(0);
-  //   });
-  // });
+    //   it('should filter products by title (case insensitive)', () => {
+    //     service.find('product 1');
+    //     expect(service.products().length).toBe(1);
+    //     expect(service.products()[0].title).toBe('Product 1');
+    //   });
+    //   it('should filter products with uppercase search text', () => {
+    //     service.find('PRODUCT 2');
+    //     expect(service.products().length).toBe(1);
+    //     expect(service.products()[0].title).toBe('Product 2');
+    //   });
+    it('should return all matching products', () => {
+      service.find('Produto');
+      expect(service.products().length).toBe(2);
+    });
+    it('should return empty array when no products match', () => {
+      service.find('nonexistent');
+      expect(service.products().length).toBe(0);
+    });
+  });
 
   // describe('fetchAllProductsCreated', () => {
   //   it('should return a signal with products from storage', () => {
