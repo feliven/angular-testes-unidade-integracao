@@ -153,22 +153,34 @@ fdescribe('ProductsService', () => {
     });
   });
 
-  // describe('fetchAllProductsCreated', () => {
-  //   it('should return a signal with products from storage', () => {
-  //     storageServiceSpy.getAll.and.returnValue(mockStoredProducts);
+  describe('fetchAllProductsCreated', () => {
+    it('should return a signal with products from storage', () => {
+      const produtos: Product[] = [
+        {
+          id: 5,
+          title: 'Produto F',
+          category: 'eletronic',
+          description: 'Product F',
+          price: '500',
+          image: 'image.png',
+        },
+      ];
 
-  //     const result = service.fetchAllProductsCreated();
-  //     expect(result()).toEqual(mockStoredProducts);
-  //     expect(storageServiceSpy.getAll).toHaveBeenCalled();
-  //   });
+      sessionStorage.setValue('products', produtos);
+      const productsCreated = service.fetchAllProductsCreated()().flat();
 
-  //   it('should return empty array when storage is empty', () => {
-  //     storageServiceSpy.getAll.and.returnValue([]);
+      expect(productsCreated).toEqual(produtos);
+    });
 
-  //     const result = service.fetchAllProductsCreated();
-  //     expect(result()).toEqual([]);
-  //   });
-  // });
+    it('should return empty array when storage is empty', () => {
+      const produtos: Product[] = [];
+
+      sessionStorage.setValue('products', produtos);
+      const productsCreated = service.fetchAllProductsCreated()().flat();
+
+      expect(productsCreated).toEqual([]);
+    });
+  });
 
   // describe('fetchAllProducts', () => {
   //   it('should increment currentItemPerPage', () => {
