@@ -65,7 +65,7 @@ const mockStoredProducts: Product[] = [
   },
 ];
 
-fdescribe('ProductsService', () => {
+describe('ProductsService', () => {
   let service: ProductsService;
   let sessionStorage = new StorageServiceMock();
 
