@@ -61,7 +61,7 @@ describe('ManageProductsComponent', () => {
 
   it('should open CreateProductComponent dialog on onSubscribeProduct', () => {
     // Spy on the signal's update method to prevent actual execution logic issues and verify call
-    spyOn(component.products, 'update');
+    jest.spyOn(component.products, 'update');
 
     component.onSubscribeProduct();
 
@@ -70,8 +70,8 @@ describe('ManageProductsComponent', () => {
   });
 
   it('should delete product when confirmed', () => {
-    spyOn(window, 'confirm').and.returnValue(true);
-    spyOn(component.products, 'update');
+    jest.spyOn(window, 'confirm').and.returnValue(true);
+    jest.spyOn(component.products, 'update');
 
     component.onDelete(mockProduct);
 
@@ -81,7 +81,7 @@ describe('ManageProductsComponent', () => {
   });
 
   it('should NOT delete product when NOT confirmed', () => {
-    spyOn(window, 'confirm').and.returnValue(false);
+    jest.spyOn(window, 'confirm').and.returnValue(false);
 
     component.onDelete(mockProduct);
 
@@ -104,14 +104,14 @@ describe('ManageProductsComponent', () => {
   });
 
   it('should reset products when search text is empty', () => {
-    spyOn(component.products, 'update');
+    jest.spyOn(component.products, 'update');
     component.onSearchText('');
     // When empty, it calls update with fetchAllProductsCreated result
     expect(component.products.update).toHaveBeenCalled();
   });
 
   it('should open dialog with data on onEdit', () => {
-    spyOn(component.products, 'update');
+    jest.spyOn(component.products, 'update');
 
     component.onEdit(mockProduct);
 

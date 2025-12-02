@@ -132,7 +132,7 @@ describe('CreateProductComponent (editar produto)', () => {
 
   it('deve chamar o método save do createProductService ao enviar o formulário', () => {
     const createProductService = TestBed.inject(CreateProductService);
-    spyOn(createProductService, 'save').and.returnValue(Promise.resolve());
+    jest.spyOn(createProductService, 'save').mockResolvedValue();
     const evento = {
       target: {
         files: [new File([''], 'imagem.jpeg', { type: 'image/jpeg' })],
@@ -151,7 +151,7 @@ describe('CreateProductComponent (editar produto)', () => {
   it('deve remover a obrigatoriedade da imagem ao editar', () => {
     const imageControl = component.formGroup.get('image');
     // Control tem valor vazio porém não deve ter o validator required ativo
-    expect(imageControl?.valid).toBeTrue();
+    expect(imageControl?.valid).toBe(true);
   });
 
   it('deve criar File a partir da base64 (imageSelected definido)', () => {
@@ -165,7 +165,7 @@ describe('CreateProductComponent (editar produto)', () => {
   it('não deve chamar save se nenhuma imagem estiver selecionada (defesa)', fakeAsync(() => {
     (component as any).imageSelected = undefined;
     const service = TestBed.inject(CreateProductService);
-    spyOn(service, 'save').and.returnValue(Promise.resolve());
+    jest.spyOn(service, 'save').mockResolvedValue();
 
     try {
       component.onSubmitForm();
@@ -240,9 +240,9 @@ describe('CreateProductComponent (novo produto)', () => {
   });
 
   it('form deve iniciar inválido (campos obrigatórios vazios)', () => {
-    expect(component.formGroup.invalid).toBeTrue();
+    expect(component.formGroup.invalid).toBe(true);
     ['title', 'description', 'category', 'price', 'image'].forEach((ctrl) => {
-      expect(component.formGroup.get(ctrl)?.invalid).toBeTrue();
+      expect(component.formGroup.get(ctrl)?.invalid).toBe(true);
     });
   });
 
@@ -259,7 +259,7 @@ describe('CreateProductComponent (novo produto)', () => {
       .get('image')
       ?.setValue('file-placeholder', { emitModelToViewChange: false });
 
-    expect(component.formGroup.valid).toBeTrue();
+    expect(component.formGroup.valid).toBe(true);
   });
 
   it('deve selecionar a imagem e permitir submit após preencher restantes', () => {
@@ -278,12 +278,12 @@ describe('CreateProductComponent (novo produto)', () => {
       .get('image')
       ?.setValue('foto.jpg', { emitModelToViewChange: false });
 
-    expect(component.formGroup.valid).toBeTrue();
+    expect(component.formGroup.valid).toBe(true);
   });
 
   it('deve chamar save e fechar dialog ao submeter novo produto', async () => {
     const service = TestBed.inject(CreateProductService);
-    spyOn(service, 'save').and.returnValue(Promise.resolve());
+    jest.spyOn(service, 'save').mockResolvedValue();
 
     const fakeFile = new File(['x'], 'novo.jpg', { type: 'image/jpeg' });
     component.onImageSelected({ target: { files: [fakeFile] } });
@@ -309,7 +309,9 @@ describe('CreateProductComponent (novo produto)', () => {
       }
     }
 
-    spyOn(window as any, 'FileReader').and.returnValue(new MockFileReader());
+    jest
+      .spyOn(window as any, 'FileReader')
+      .mockResolvedValue(new MockFileReader());
     component.onSubmitForm();
     await fixture.whenStable();
     expect(service.save).toHaveBeenCalledTimes(1);
@@ -335,13 +337,13 @@ describe('CreateProductComponent (novo produto)', () => {
       .get('image')
       ?.setValue('foto.jpg', { emitModelToViewChange: false });
 
-    expect(component.formGroup.invalid).toBeTrue();
-    expect(component.formGroup.get('price')?.invalid).toBeTrue();
+    expect(component.formGroup.invalid).toBe(true);
+    expect(component.formGroup.get('price')?.invalid).toBe(true);
   });
 
   it('não deve permitir submit se form inválido (sem image)', fakeAsync(() => {
     const service = TestBed.inject(CreateProductService);
-    spyOn(service, 'save').and.returnValue(Promise.resolve());
+    jest.spyOn(service, 'save').mockResolvedValue();
     component.formGroup.patchValue({
       title: 'SemImagem',
       description: 'Desc',

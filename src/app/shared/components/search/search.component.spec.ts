@@ -21,7 +21,7 @@ describe('SearchComponent', () => {
   });
 
   it('deveria emitir texto de busca', () => {
-    const spySearchText = spyOn(component.searchText, 'emit');
+    const spySearchText = jest.spyOn(component.searchText, 'emit');
 
     const inputElemento = document.createElement('input');
     inputElemento.value = 'teste';
@@ -37,7 +37,7 @@ describe('SearchComponent', () => {
   });
 
   it('deveria emitir string vazia se texto do input for vazio', () => {
-    const spyInputChange = spyOn(component.searchText, 'emit');
+    const spyInputChange = jest.spyOn(component.searchText, 'emit');
     const inputElemento = document.createElement('input');
     inputElemento.value = '';
     const event = { target: inputElemento } as unknown as Event;
@@ -49,7 +49,7 @@ describe('SearchComponent', () => {
   });
 
   it('should emit on successive input changes', () => {
-    const spyInputChange = spyOn(component.searchText, 'emit');
+    const spyInputChange = jest.spyOn(component.searchText, 'emit');
     const inputElemento = document.createElement('input');
 
     inputElemento.value = 'a';
@@ -61,7 +61,7 @@ describe('SearchComponent', () => {
     inputElemento.value = 'abc';
     component.onInputChange({ target: inputElemento } as unknown as Event);
 
-    expect(spyInputChange.calls.allArgs()).toEqual([['a'], ['ab'], ['abc']]);
+    expect(spyInputChange.mock.calls).toEqual([['a'], ['ab'], ['abc']]);
     expect(spyInputChange).toHaveBeenCalledTimes(3);
   });
 

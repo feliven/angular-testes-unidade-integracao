@@ -62,7 +62,7 @@ describe('CardComponent', () => {
     component.product = product;
     fixture.detectChanges();
 
-    const spyEdit = spyOn(component.onEdit, 'emit');
+    const spyEdit = jest.spyOn(component.onEdit, 'emit');
 
     component.isManageable = true;
     fixture.detectChanges();
@@ -89,7 +89,7 @@ describe('CardComponent', () => {
     component.product = product;
     fixture.detectChanges();
 
-    const spyDelete = spyOn(component.onDelete, 'emit');
+    const spyDelete = jest.spyOn(component.onDelete, 'emit');
 
     component.isManageable = true;
     fixture.detectChanges();
