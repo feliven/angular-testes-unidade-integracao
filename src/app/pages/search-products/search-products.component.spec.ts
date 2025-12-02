@@ -4,7 +4,7 @@ import { signal } from '@angular/core';
 import { SearchProductsComponent } from './search-products.component';
 import { ProductsService } from '../../shared/services/products/products.service';
 
-fdescribe('SearchProductsComponent', () => {
+describe('SearchProductsComponent', () => {
   let component: SearchProductsComponent;
   let fixture: ComponentFixture<SearchProductsComponent>;
   let productsServiceMock: any;
