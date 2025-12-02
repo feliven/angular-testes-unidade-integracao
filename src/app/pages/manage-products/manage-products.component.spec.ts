@@ -23,15 +23,27 @@ describe('ManageProductsComponent', () => {
   };
 
   beforeEach(async () => {
+    // JSDOM, the default environment for many JavaScript tests, does not include a layout engine
+    // and thus doesn't support IntersectionObserver. You need to mock the API in your tests.
+
+    const mockIntersectionObserver = jest.fn();
+    mockIntersectionObserver.mockReturnValue({
+      observe: () => null,
+      unobserve: () => null,
+      disconnect: () => null,
+    });
+    window.IntersectionObserver = mockIntersectionObserver;
+
     productsServiceMock = {
-      fetchAllProductsCreated: jasmine
-        .createSpy('fetchAllProductsCreated')
-        .and.returnValue(signal([mockProduct])),
-      delete: jasmine.createSpy('delete'),
+      // CHANGE: jasmine.createSpy() -> jest.fn()
+      fetchAllProductsCreated: jest.fn().mockReturnValue(signal([mockProduct])),
+      // CHANGE: jasmine.createSpy() -> jest.fn()
+      delete: jest.fn(),
     };
 
     matDialogMock = {
-      open: jasmine.createSpy('open').and.returnValue({
+      // CHANGE: jasmine.createSpy().and.returnValue() -> jest.fn().mockReturnValue()
+      open: jest.fn().mockReturnValue({
         afterClosed: () => of(true),
       }),
     };
@@ -70,7 +82,7 @@ describe('ManageProductsComponent', () => {
   });
 
   it('should delete product when confirmed', () => {
-    jest.spyOn(window, 'confirm').and.returnValue(true);
+    jest.spyOn(window, 'confirm').mockReturnValue(true);
     jest.spyOn(component.products, 'update');
 
     component.onDelete(mockProduct);
@@ -81,7 +93,7 @@ describe('ManageProductsComponent', () => {
   });
 
   it('should NOT delete product when NOT confirmed', () => {
-    jest.spyOn(window, 'confirm').and.returnValue(false);
+    jest.spyOn(window, 'confirm').mockReturnValue(false);
 
     component.onDelete(mockProduct);
 

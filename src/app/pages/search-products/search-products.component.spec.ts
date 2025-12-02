@@ -13,8 +13,10 @@ describe('SearchProductsComponent', () => {
     // Create a mock for ProductsService
     productsServiceMock = {
       products: signal([]),
-      fetchAllProducts: jasmine.createSpy('fetchAllProducts'),
-      find: jasmine.createSpy('find'),
+      // CHANGE: Replaced jasmine.createSpy() with jest.fn()
+      fetchAllProducts: jest.fn(),
+      // CHANGE: Replaced jasmine.createSpy() with jest.fn()
+      find: jest.fn(),
       currentItemPerPage: 10, // Initial value to verify reset logic
     };
 
@@ -56,8 +58,9 @@ describe('SearchProductsComponent', () => {
   });
 
   it('should reset pagination and fetch default products when search text is empty', () => {
-    // Reset spy to ensure we are capturing the call inside onSearchText
-    productsServiceMock.fetchAllProducts.calls.reset();
+    // CHANGE: Replaced .calls.reset() with .mockClear()
+    // Jest uses mockClear() to reset call history while keeping the mock implementation
+    productsServiceMock.fetchAllProducts.mockClear();
     component.onSearchText('');
     expect(productsServiceMock.currentItemPerPage).toBe(0);
     expect(productsServiceMock.fetchAllProducts).toHaveBeenCalledWith(5);

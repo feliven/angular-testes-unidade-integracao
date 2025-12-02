@@ -39,8 +39,9 @@ class MockCreateProductApiService {
   }
 }
 
+// CHANGE: Replaced jasmine.createSpy('close') with jest.fn()
 const mockDialogRef = {
-  close: jasmine.createSpy('close'),
+  close: jest.fn(),
 };
 
 const mockData = {
@@ -58,6 +59,9 @@ describe('CreateProductComponent (editar produto)', () => {
   let fixture: ComponentFixture<CreateProductComponent>;
 
   beforeEach(async () => {
+    // CHANGE: Reset mock before each test (Jest best practice)
+    mockDialogRef.close.mockClear();
+
     await TestBed.configureTestingModule({
       imports: [
         CreateProductComponent,
@@ -175,8 +179,9 @@ describe('CreateProductComponent (editar produto)', () => {
   }));
 
   it('deve manter os valores do formulário inalterados após ngOnInit com dados (edição)', () => {
+    // CHANGE: Replaced jasmine.objectContaining with expect.objectContaining
     expect(component.formGroup.value).toEqual(
-      jasmine.objectContaining({
+      expect.objectContaining({
         id: mockData.id,
         title: mockData.title,
         description: mockData.description,
@@ -202,6 +207,9 @@ describe('CreateProductComponent (novo produto)', () => {
   let fixture: ComponentFixture<CreateProductComponent>;
 
   beforeEach(async () => {
+    // CHANGE: Reset mock before each test (Jest best practice)
+    mockDialogRef.close.mockClear();
+
     await TestBed.configureTestingModule({
       imports: [
         CreateProductComponent,
@@ -309,14 +317,17 @@ describe('CreateProductComponent (novo produto)', () => {
       }
     }
 
+    // CHANGE: Replaced mockResolvedValue with mockImplementation for constructor mock
+    // mockResolvedValue is for promises, but FileReader is a class constructor
     jest
       .spyOn(window as any, 'FileReader')
-      .mockResolvedValue(new MockFileReader());
+      .mockImplementation(() => new MockFileReader());
     component.onSubmitForm();
     await fixture.whenStable();
     expect(service.save).toHaveBeenCalledTimes(1);
+    // CHANGE: Replaced jasmine.objectContaining with expect.objectContaining
     expect(service.save).toHaveBeenCalledWith(
-      jasmine.objectContaining({
+      expect.objectContaining({
         title: 'Novo',
         image: 'data:image/jpeg;base64,AAA',
       })
