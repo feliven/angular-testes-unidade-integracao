@@ -11,7 +11,7 @@ import { environment } from '../../../../../environments/environment';
 import { CreateProductApiService } from './create-product-api.service';
 import { Product } from '../../../../types/product.inteface';
 
-fdescribe('CreateProductApiService', () => {
+describe('CreateProductApiService', () => {
   let service: CreateProductApiService;
   let httpTestingController: HttpTestingController;
 
