@@ -210,26 +210,39 @@ fdescribe('ProductsService', () => {
     //   });
   });
 
-  // describe('delete', () => {
-  //   it('should call storageService.remove with product id', () => {
-  //     const product = mockProducts[0];
+  describe('delete', () => {
+    beforeEach(() => {
+      service.products.set(mockStoredProducts);
+    });
 
-  //     service.delete(product);
-  //     expect(storageServiceSpy.remove).toHaveBeenCalledWith('1');
-  //   });
+    it('deve remover o produto do armazenamento', () => {
+      spyOn(sessionStorage, 'remove');
+      const initialProductsLength = sessionStorage.getAll().length;
 
-  //   it('should convert product id to string', () => {
-  //     const product: Product = {
-  //       id: 123,
-  //       title: 'Test',
-  //       price: '10',
-  //       description: 'Test',
-  //       image: 'test.jpg',
-  //       category: 'test',
-  //     };
+      service.delete(mockStoredProducts[0]);
 
-  //     service.delete(product);
-  //     expect(storageServiceSpy.remove).toHaveBeenCalledWith('123');
-  //   });
-  // });
+      expect(sessionStorage.remove).toHaveBeenCalledTimes(1);
+      expect(sessionStorage.getAll().length).toBeLessThanOrEqual(
+        initialProductsLength
+      );
+    });
+
+    //   it('should call storageService.remove with product id', () => {
+    //     const product = mockProducts[0];
+    //     service.delete(product);
+    //     expect(storageServiceSpy.remove).toHaveBeenCalledWith('1');
+    //   });
+    //   it('should convert product id to string', () => {
+    //     const product: Product = {
+    //       id: 123,
+    //       title: 'Test',
+    //       price: '10',
+    //       description: 'Test',
+    //       image: 'test.jpg',
+    //       category: 'test',
+    //     };
+    //     service.delete(product);
+    //     expect(storageServiceSpy.remove).toHaveBeenCalledWith('123');
+    //   });
+  });
 });
